@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_17_174743) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_17_190019) do
+  create_table "activity_logs", force: :cascade do |t|
+    t.string "action"
+    t.datetime "created_at", null: false
+    t.string "path"
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "done"

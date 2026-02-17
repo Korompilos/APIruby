@@ -8,6 +8,12 @@ class AuthenticationController < ApplicationController
     json_response(auth_token: auth_token)
   end
 
+  def logout
+    # Στο stateless JWT απλώς επιστρέφουμε επιτυχία.
+    # Ο χρήστης "βγαίνει" διαγράφοντας το token από το Postman/Frontend.
+    json_response({ message: "Logout successful" })
+  end
+
   private
 
   def auth_params

@@ -8,7 +8,8 @@ gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
-
+gem 'rswag-api'
+gem 'rswag-ui'
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
@@ -46,4 +47,8 @@ group :test do
   gem 'shoulda-matchers'
   gem 'faker'
   gem 'database_cleaner'
+end
+
+group :development, :test do
+  gem 'rswag-specs'
 end

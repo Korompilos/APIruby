@@ -1,0 +1,227 @@
+---
+openapi: 3.0.1
+info:
+  title: Todos API V1
+  version: v1
+  description: User manual for Todos API (JWT Auth)
+paths:
+  "/signup":
+    post:
+      summary: User Registration
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '201':
+          description: Account created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+              required:
+              - name
+              - email
+              - password
+              - password_confirmation
+  "/auth/login":
+    post:
+      summary: User Login
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: Login successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/auth/logout":
+    get:
+      summary: User Logout
+      tags:
+      - Authentication
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Logout successful
+  "/todos":
+    get:
+      summary: List all todos and todo items
+      tags:
+      - Todos
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Todos retrieved
+    post:
+      summary: Create a new todo
+      tags:
+      - Todos
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: Todo created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+              - title
+  "/todos/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Get a todo
+      tags:
+      - Todos
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Todo found
+    put:
+      summary: Update a todo
+      tags:
+      - Todos
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '204':
+          description: Todo updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+    delete:
+      summary: Delete a todo and its items
+      tags:
+      - Todos
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Todo deleted
+  "/todos/{todo_id}/items":
+    parameters:
+    - name: todo_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Create a new todo item
+      tags:
+      - Items
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: Item created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                done:
+                  type: boolean
+              required:
+              - name
+  "/todos/{todo_id}/items/{id}":
+    parameters:
+    - name: todo_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Get a todo item
+      tags:
+      - Items
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Item found
+    put:
+      summary: Update a todo item
+      tags:
+      - Items
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '204':
+          description: Item updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                done:
+                  type: boolean
+    delete:
+      summary: Delete a todo item
+      tags:
+      - Items
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Item deleted
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+- bearer_auth: []
