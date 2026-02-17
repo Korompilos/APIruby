@@ -1,24 +1,7 @@
-# README
+Εγχειρίδιο Χρήσης (Swagger)
+Η εφαρμογή διαθέτει αυτοματοποιημένη τεκμηρίωση τύπου OpenAPI.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+URL Τεκμηρίωσης: http://localhost:3000/api-docs
 
-Things you may want to cover:
+Οδηγίες: Χρησιμοποιήστε το endpoint /signup ή /auth/login για να λάβετε ένα token. Στη συνέχεια, πατήστε το κουμπί Authorize και εισάγετε το token για να ξεκλειδώσετε τα υπόλοιπα endpoints.
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
