@@ -2,12 +2,17 @@ require 'rails_helper'
 
 RSpec.describe 'Todos API', type: :request do
   # Αρχικοποίηση δεδομένων
-  let!(:todos) { create_list(:todo, 10) }
+  let(:user) { create(:user) }
+  # Δημιουργούμε 10 todos που ανήκουν στον χρήστη (created_by)
+  let!(:todos) { create_list(:todo, 10, created_by: user.id) }
   let(:todo_id) { todos.first.id }
+  # Headers με το JWT token
+  let(:headers) { valid_headers }
 
   # Test suite για GET /todos
   describe 'GET /todos' do
-    before { get '/todos' }
+    # Περνάμε τα headers σε κάθε κλήση
+    before { get '/todos', params: {}, headers: headers }
 
     it 'returns todos' do
       expect(json).not_to be_empty
@@ -21,7 +26,7 @@ RSpec.describe 'Todos API', type: :request do
 
   # Test suite για GET /todos/:id
   describe 'GET /todos/:id' do
-    before { get "/todos/#{todo_id}" }
+    before { get "/todos/#{todo_id}", params: {}, headers: headers }
 
     context 'when the record exists' do
       it 'returns the todo' do
@@ -49,10 +54,14 @@ RSpec.describe 'Todos API', type: :request do
 
   # Test suite για POST /todos
   describe 'POST /todos' do
-    let(:valid_attributes) { { title: 'Learn Elm', created_by: '1' } }
+    # Ορίζουμε τις παραμέτρους ως Hash (ΧΩΡΙΣ .to_json εδώ)
+    let(:valid_attributes) do
+      { title: 'Learn Elm', created_by: user.id.to_s }
+    end
 
     context 'when the request is valid' do
-      before { post '/todos', params: valid_attributes }
+      # Μετατρέπουμε σε JSON ΜΙΑ φορά εδώ
+      before { post '/todos', params: valid_attributes.to_json, headers: headers }
 
       it 'creates a todo' do
         expect(json['title']).to eq('Learn Elm')
@@ -64,24 +73,25 @@ RSpec.describe 'Todos API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/todos', params: { title: 'Foobar' } }
+      # Στέλνουμε κενό τίτλο σε μορφή JSON
+      before { post '/todos', params: { title: nil }.to_json, headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
       end
 
       it 'returns a validation failure message' do
-        expect(response.body).to match(/Validation failed: Created by can't be blank/)
+        expect(json['message']).to match(/Validation failed: Title can't be blank/)
       end
     end
   end
 
   # Test suite για PUT /todos/:id
   describe 'PUT /todos/:id' do
-    let(:valid_attributes) { { title: 'Shopping' } }
+    let(:valid_attributes) { { title: 'Shopping' }.to_json }
 
     context 'when the record exists' do
-      before { put "/todos/#{todo_id}", params: valid_attributes }
+      before { put "/todos/#{todo_id}", params: valid_attributes, headers: headers }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -95,7 +105,7 @@ RSpec.describe 'Todos API', type: :request do
 
   # Test suite για DELETE /todos/:id
   describe 'DELETE /todos/:id' do
-    before { delete "/todos/#{todo_id}" }
+    before { delete "/todos/#{todo_id}", params: {}, headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

@@ -1,7 +1,9 @@
 class Todo < ApplicationRecord
-  # model association
+  # Σχέσεις
   has_many :items, dependent: :destroy
+  # Σύνδεση με τον User μέσω του created_by
+  belongs_to :user, foreign_key: :created_by
 
-  # validations
+  # Επικυρώσεις
   validates_presence_of :title, :created_by
 end
